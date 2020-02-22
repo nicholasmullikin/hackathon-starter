@@ -8,9 +8,8 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
-const lusca = require('lusca');
+//const lusca = require('lusca');
 const dotenv = require('dotenv');
-const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
 const passport = require('passport');
@@ -31,7 +30,7 @@ dotenv.config({ path: '.env.example' });
 const homeController = require('./controllers/home');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-
+const secureController = require('./controllers/security');
 /**
  * API keys and Passport configuration.
  */
@@ -40,6 +39,9 @@ const contactController = require('./controllers/contact');
  * Create Express server.
  */
 const app = express();
+
+
+
 
 /**
  * Connect to MongoDB.
@@ -77,19 +79,13 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   cookie: { maxAge: 1209600000 } // two weeks in milliseconds
 }));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
-    // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
-app.use(lusca.xframe('SAMEORIGIN'));
-app.use(lusca.xssProtection(true));
+//app.use(lusca.xframe('SAMEORIGIN'));
+//app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.user = req.user;
@@ -122,6 +118,9 @@ app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawes
 app.get('/', homeController.index);
 
 
+app.get('/secure/home_station', secureController.home_station);
+app.get('/secure/door_station', secureController.door_station);
+
 /**
  * API examples routes.
  */
@@ -139,7 +138,7 @@ app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 app.get('/api/lob', apiController.getLob);
-app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
+app.get('/api/upload', apiController.getFileUpload);
 app.get('/api/here-maps', apiController.getHereMaps);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 
