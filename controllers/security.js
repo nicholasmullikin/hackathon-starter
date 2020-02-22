@@ -1,6 +1,15 @@
 var home_station = [], door_station = [];
 var sessionData = [home_station, door_station];
 
+function processHome(data){
+  if(Math.random()*2 === 1){
+    return {picture: true};
+  }
+  else{
+    return {picture: false};
+  }
+}
+
 /**
  * GET /secure/home_station
  * Endpoint to receive data for home station
@@ -13,7 +22,7 @@ exports.home_station = (req, res) => {
     console.log("not JSON");
     return res.json({"Error":"Not a valid json"});
   }
-  res.json(home_station);
+  res.json(processHome(home_station));
 };
 
 
