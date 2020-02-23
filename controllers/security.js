@@ -47,3 +47,8 @@ exports.door_station = (req, res) => {
   }
   res.json(door_station);
 };
+
+
+exports.show_data = (req, res) => {
+  res.json(sessionData);
+};
