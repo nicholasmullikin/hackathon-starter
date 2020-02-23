@@ -1,5 +1,5 @@
 
-var home_station = [], door_station = [];
+var home_station = [], door_station = [], home_station_images = [];
 var sessionData = [home_station, door_station];
 
 function doorIsClosed() {
@@ -24,18 +24,33 @@ function processHome(){
  */
 exports.home_station = (req, res) => {
 
-  var jsonObject =JSON.parse(req.query.data);
   try {
-    if(jsonObject.imagestring!==""){
-      var imageBuffer = new Buffer(jsonObject.imagestring, 'base64');
-      fs.writeFile('test.jpg', imageBuffer.data, function(err) { console.log(err) });
-    }
+    let jsonObject =JSON.parse(req.query.data);
     home_station.push(jsonObject);
   } catch (e) {
     console.log("not JSON");
     return res.json({"Error":"Not a valid json"});
   }
   res.json(processHome());
+};
+
+
+
+exports.home_station_image = (req, res) => {
+
+  try {
+    let jsonObject =JSON.parse(req.body.data);
+    if(jsonObject.imagestring !==""){
+      var imageBuffer = new Buffer(jsonObject.imagestring, 'base64');
+      fs.writeFile('test.jpg', imageBuffer.data, function(err) { console.log(err) });
+      home_station_images.push('test.jpg')
+    }
+    home_station.push(jsonObject);
+  } catch (e) {
+    console.log("not JSON");
+    return res.json({"Error":"Not a valid json"});
+  }
+  return res.json([true]);
 };
 
 
