@@ -120,7 +120,7 @@ app.get('/', homeController.index);
 
 
 app.get('/secure/home_station', secureController.home_station);
-app.post('/secure/home_station', secureController.home_station);
+app.post('/secure/home_station_image', secureController.home_station_image);
 app.get('/secure/door_station', secureController.door_station);
 app.get('/secure/get_data', secureController.show_data);
 /**
