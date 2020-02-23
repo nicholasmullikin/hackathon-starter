@@ -1,0 +1,94 @@
+extends ../layout
+
+block content
+  
+  // comments in JS
+  script#vertexShader(type='x-shader/x-vertex').
+    varying vec2 v_uv;
+    void main() {
+    v_uv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
+    }
+  // FragmentShader code here
+  // // built from the tutorial https://www.youtube.com/watch?v=dhuigO4A7RY
+  script#fragmentShader(type='x-shader/x-fragment').
+    #define PI2 6.28318530718
+    #define PI 3.1415926535897
+    uniform vec2 u_mouse;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    varying vec2 v_uv;
+    mat2 r2(float a) {
+    return mat2(cos(a), -sin(a), sin(a),cos(a));
+    }
+    float hash2( vec2 p) {
+    p = fract(p*vec2(125.34, 456.21));
+    p+= dot(p, p+45.32);
+    return fract(p.x*p.y);
+    }
+    vec2 hash( vec2 p ) {
+    p *= mat2( 127.1,-311.7,27.3,215.3 );
+    return 2.*fract(sin(p)*43758.5453123) -1.;
+    }
+    float star( vec2 p, float flare) {
+    float d = length(p);
+    // falloff for light
+    float m = .01/d;
+    float col = m;
+    // light rays
+    float rays = max(0.,.45 - abs(p.x*p.y*1000.));
+    col += rays * flare;
+    // rotate and do again
+    p *= r2(PI/4.);
+    rays = max(0.,.5 - abs(p.x*p.y*1000.));
+    col += rays *.3 * flare;
+    col *= smoothstep(.5,.2,d);
+    return col;
+    }
+    vec3 star_layer(vec2 p) {
+    vec3 col = vec3(0.);
+    vec2 pg = fract(p)-.5;
+    vec2 id = floor(p);
+    for(int y=-1;y<=1;y++) {
+    for(int x=-1;x<=1;x++) {
+    vec2 offset = vec2(x,y);
+    float pid = hash2(id+offset);
+    float size = fract(pid*345.32);
+    float rn = fract(pid*645.32);
+    //position
+    vec2 pos = pg-offset-(vec2(pid,fract(pid*2.))-.5);
+    float star = star(pos,smoothstep(.86,1.,size));
+    // color stuff
+    vec3 wv =  vec3(1., rn, rn)*sin(pid*943.321+u_time*.5)*PI;
+    vec3 color = sin(wv)*1.5+1.5;
+    star *= sin(u_time*2.5+pid*6.2831)*1.+1.5;
+    // slap that math tother
+    col+= star*size*color;
+    }
+    }
+    return col;
+    }
+    
+    void main() {
+    // Adjust coords to center of the screen and
+    // corect pixel aspect ratio
+    vec2 uv = (gl_FragCoord.xy-.5*u_resolution.xy)/u_resolution.y;
+    vec2 ms = (u_mouse.xy-u_resolution.xy*.5)/u_resolution.y;
+    uv *= .5;
+    vec3 col = vec3(0.);
+    uv *= r2(ms.x*.25);
+    for(float i=0.; i<1.; i+=1./5.) {
+    float depth = fract(i+u_time*.1);
+    float scale = mix(20.,1.,depth);
+    float fade = depth*smoothstep(1.,.9,depth);
+    //uv +=ms;
+    col += star_layer(uv*scale+(i*32.)+ms)*fade;
+    }
+    gl_FragColor = vec4(col,1.0);
+    }
+    
+  
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js")
+  script(src="/js/star.js")
+      
+  link(rel="stylesheet", href="/css/star.css")
