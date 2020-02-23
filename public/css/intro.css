@@ -1,0 +1,137 @@
+@font-face {
+  font-family: "Galano Classic";
+  src: url("https://pxgcdn.com/fonts/galanoclassic/galano_classic_bold-webfont.woff2") format("woff2"), url("https://pxgcdn.com/fonts/galanoclassic/galano_classic_bold-webfont.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Galano Grotesque Alt";
+  src: url("https://pxgcdn.com/fonts/galanogrotesquealt/galano_grotesque_alt-webfont.woff2") format("woff2"), url("https://pxgcdn.com/fonts/galanogrotesquealt/galano_grotesque_alt-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --theme-font-size-breakpoint: 1440;
+  --theme-font-size-minimum-value: 16;
+  --theme-font-size-minimum-value-breakpoint: 320;
+  --theme-font-size-slope-adjust: 0.6;
+  --theme-addon-multiplier: 0;
+  --theme-addon-unit: calc(1vw - var(--theme-font-size-breakpoint) * 1px / 100);
+  --theme-addon: calc(var(--theme-addon-unit) * var(--theme-addon-multiplier));
+  --ms-ratio: 1.2;
+  --ms-0: 16;
+  --ms-1: calc(var(--ms-0) * var(--ms-ratio));
+  --ms-2: calc(var(--ms-1) * var(--ms-ratio));
+  --ms-3: calc(var(--ms-2) * var(--ms-ratio));
+  --ms-4: calc(var(--ms-3) * var(--ms-ratio));
+  --ms-5: calc(var(--ms-4) * var(--ms-ratio));
+  --ms-6: calc(var(--ms-5) * var(--ms-ratio));
+  --ms-7: calc(var(--ms-6) * var(--ms-ratio));
+  --ms-8: calc(var(--ms-7) * var(--ms-ratio));
+}
+@media only screen and (min-width: 1440px) {
+  :root {
+    --theme-font-size-slope-adjust: 0.2;
+    --theme-addon-multiplier: 1;
+  }
+}
+
+* {
+  --x0: var(--theme-font-size-minimum-value-breakpoint);
+  --y0: var(--theme-font-size-minimum-value);
+  --x1: var(--theme-font-size-breakpoint);
+  --y1: var(--font-size);
+  --y0-new: calc(var(--y1) - (var(--y1) - var(--y0)) * var(--theme-font-size-slope-adjust) );
+  --a: calc((var(--y1) - var(--y0-new)) / (var(--x1) - var(--x0)));
+  --b: calc(var(--y0-new) - var(--a) * var(--x0));
+  --y2: calc(var(--a) * 100vw + var(--b) * 1px);
+  --final-font-size: calc(var(--y2) + var(--theme-addon));
+}
+
+body {
+  --font-size: var(--ms-1);
+  font-size: var(--final-font-size);
+  line-height: 1.5;
+  font-family: Galano Grotesque Alt, sans-serif;
+  padding: 2em 2em 4em;
+}
+
+body {
+  background-image: url('/favicon.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 30% 30%;
+}
+
+p {
+  line-height: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+blockquote {
+  font-family: Galano Classic, sans-serif;
+}
+
+h1 {
+  --font-size: var(--ms-8);
+  font-size: var(--final-font-size);
+  line-height: 1.2;
+}
+
+h2 {
+  --font-size: var(--ms-5);
+  font-size: var(--final-font-size);
+}
+
+.lead,
+blockquote {
+  --font-size: var(--ms-2);
+  font-size: var(--final-font-size);
+}
+
+.content {
+  max-width: 40em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content > * {
+  margin-top: 2rem;
+}
+
+a {
+  color: #9660C6;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+  padding: 0.75em 1.25em;
+  border: 0;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #9660C6;
+  border-radius: 4px;
+  transition: all 0.2s cubic-bezier(0, 0, 0.58, 1);
+  transition-property: transform, background, background-color, color, box-shadow;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -moz-osx-font-smoothing: grayscale;
+}
+.button:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.7);
+}
+.button:active, .button:focus {
+  transform: scale(1.02) translateY(1px);
+  transition-duration: 0.1s;
+}
