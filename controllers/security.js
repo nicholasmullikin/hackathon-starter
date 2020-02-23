@@ -1,9 +1,10 @@
+
 var home_station = [], door_station = [];
 var sessionData = [home_station, door_station];
 
 function doorIsClosed() {
   if(door_station) {
-    return door_station[door_station.length - 1].sensor1 < 200;
+    return door_station[door_station.length - 1].sensor1 < 2000;
   }
   return false;
 }
@@ -24,6 +25,10 @@ function processHome(){
 exports.home_station = (req, res) => {
 
   try {
+    if(req.query.data.imagestring!==""){
+      var imageBuffer = new Buffer(req.query.data.imagestring, 'base64');
+      fs.writeFile('test.jpg', imageBuffer.data, function(err) { console.log(err) });
+    }
     home_station.push(JSON.parse(req.query.data));
   } catch (e) {
     console.log("not JSON");
