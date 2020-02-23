@@ -71,9 +71,9 @@ app.use(sass({
   dest: path.join(__dirname, 'public')
 }));
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser({limit: '50mb'}));
+//app.use(bodyParser());
 app.use(session({
   resave: true,
   saveUninitialized: true,
