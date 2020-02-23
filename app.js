@@ -71,9 +71,11 @@ app.use(sass({
   dest: path.join(__dirname, 'public')
 }));
 app.use(logger('dev'));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(bodyParser());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -123,10 +125,11 @@ app.get('/secure/home_station', secureController.home_station);
 app.post('/secure/home_station_image', secureController.home_station_image);
 app.get('/secure/door_station', secureController.door_station);
 app.get('/secure/get_data', secureController.show_data);
+app.get('/secure/request', secureController.make_requests);
 /**
  * API examples routes.
  */
- app.get('/application', applicationController.getApi);
+ app.get('/application', secureController.getApi);
 
 
 /**

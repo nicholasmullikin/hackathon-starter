@@ -1,10 +1,10 @@
-
-var home_station = [], door_station = [], home_station_images = [];
+const fs = require('fs');
+var home_station = [], door_station = [{ sensor1: 0 }], home_station_images = [];
 var sessionData = [home_station, door_station];
 
 function doorIsClosed() {
   if(door_station) {
-    return door_station[door_station.length - 1].sensor1 < 2000;
+    return Number(door_station[door_station.length - 1].sensor1) < 2000;
   }
   return false;
 }
@@ -26,12 +26,13 @@ exports.home_station = (req, res) => {
 
   try {
     let jsonObject =JSON.parse(req.query.data);
+    console.log(jsonObject);
     home_station.push(jsonObject);
+    return res.json(processHome());
   } catch (e) {
     console.log("not JSON");
     return res.json({"Error":"Not a valid json"});
   }
-  res.json(processHome());
 };
 
 
@@ -41,8 +42,8 @@ exports.home_station_image = (req, res) => {
   try {
     let jsonObject =JSON.parse(req.body.data);
     if(jsonObject.imagestring !==""){
-      var imageBuffer = new Buffer(jsonObject.imagestring, 'base64');
-      fs.writeFile('test.jpg', imageBuffer.data, function(err) { console.log(err) });
+      let base64Data = jsonObject.imagestring.replace(/^data:image\/png;base64,/, "");
+      fs.writeFile('test.jpg', base64Data, 'base64', function(err) { console.log(err) });
       home_station_images.push('test.jpg')
     }
     home_station.push(jsonObject);
@@ -72,4 +73,23 @@ exports.door_station = (req, res) => {
 
 exports.show_data = (req, res) => {
   res.json(sessionData);
+};
+
+
+
+exports.make_requests = (req, res) => {
+  res.render('secure/show_data', {
+    title: 'Home'
+  });
+};
+
+
+/**
+ * GET /
+ * Application page.
+ */
+exports.getApi = (req, res) => {
+  res.render('api/checkmate', {
+    title: 'Application'
+  });
 };
