@@ -1,1 +1,32 @@
 extends ../layout
+
+block content 
+  head
+    meta(charset='utf-8')
+    title Table Style
+    meta(name='viewport' content='initial-scale=1.0; maximum-scale=1.0; width=device-width;')
+  .table-title
+    h3 Data Table
+  table.table-fill
+    thead
+      tr
+        th.text-left Month
+        th.text-left Sales
+    tbody.table-hover
+      tr
+        td.text-left January
+        td.text-left $ 50,000.00
+      tr
+        td.text-left February
+        td.text-left $ 10,000.00
+      tr
+        td.text-left March
+        td.text-left $ 85,000.00
+      tr
+        td.text-left April
+        td.text-left $ 56,000.00
+      tr
+        td.text-left May
+        td.text-left $ 98,000.00
+        
+  link(rel="stylesheet", href="/css/checkmate.css")

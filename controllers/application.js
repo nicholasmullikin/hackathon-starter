@@ -3,7 +3,7 @@
  * Application page.
  */
 exports.getApi = (req, res) => {
-  res.render('api/stars', {
+  res.render('api/checkmate', {
     title: 'Application'
   });
 };
