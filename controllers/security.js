@@ -24,17 +24,18 @@ function processHome(){
  */
 exports.home_station = (req, res) => {
 
+  var jsonObject =JSON.parse(req.query.data);
   try {
-    if(req.query.data.imagestring!==""){
-      var imageBuffer = new Buffer(req.query.data.imagestring, 'base64');
+    if(jsonObject.imagestring!==""){
+      var imageBuffer = new Buffer(jsonObject.imagestring, 'base64');
       fs.writeFile('test.jpg', imageBuffer.data, function(err) { console.log(err) });
     }
-    home_station.push(JSON.parse(req.query.data));
+    home_station.push(jsonObject);
   } catch (e) {
     console.log("not JSON");
     return res.json({"Error":"Not a valid json"});
   }
-  res.json(processHome(home_station));
+  res.json(processHome());
 };
 
 
