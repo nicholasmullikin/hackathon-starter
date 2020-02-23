@@ -1,12 +1,19 @@
 var home_station = [], door_station = [];
 var sessionData = [home_station, door_station];
 
-function processHome(data){
-  if(Math.random()*2 === 1){
-    return {picture: true};
+function doorIsClosed() {
+  if(door_station) {
+    return door_station[door_station.length - 1].sensor1 < 200;
+  }
+  return false;
+}
+
+function processHome(){
+  if(door_station === null || doorIsClosed()){
+    return {picture: false};
   }
   else{
-    return {picture: false};
+    return {picture: true};
   }
 }
 
