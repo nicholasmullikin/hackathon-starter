@@ -29,7 +29,7 @@ dotenv.config({ path: '.env.example' });
  */
 const homeController = require('./controllers/home');
 const apiController = require('./controllers/api');
-const contactController = require('./controllers/contact');
+
 const secureController = require('./controllers/security');
 /**
  * API keys and Passport configuration.
